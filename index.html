@@ -464,29 +464,106 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
 
-            nav ul {
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
 
-            .location-grid {
-                grid-template-columns: 1fr;
-            }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
 
-            .map-placeholder {
-                height: 300px;
-            }
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
 
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -527,7 +604,7 @@
                         <span class="feature-tag">WiFi</span>
                         <span class="feature-tag">Fan</span>
                     </div>
-                    <button class="cta-button">Reserve Now</button>
+                    <button class="cta-button" onclick="openBookingModal('Budget Single')">Reserve Now</button>
                 </div>
             </div>
 
@@ -542,7 +619,7 @@
                         <span class="feature-tag">Old Town View</span>
                         <span class="feature-tag">A/C</span>
                     </div>
-                    <button class="cta-button">Reserve Now</button>
+                    <button class="cta-button" onclick="openBookingModal('Budget Double')">Reserve Now</button>
                 </div>
             </div>
 
@@ -557,7 +634,7 @@
                         <span class="feature-tag">2 Beds</span>
                         <span class="feature-tag">Street View</span>
                     </div>
-                    <button class="cta-button">Reserve Now</button>
+                    <button class="cta-button" onclick="openBookingModal('Family Room')">Reserve Now</button>
                 </div>
             </div>
         </div>
@@ -715,6 +792,53 @@
         <a href="https://wa.me/66762345678" target="_blank">💬</a>
     </div>
 
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalRoomName">Book Your Room</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkin">Check-in Date</label>
+                    <input type="date" id="checkin" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkout">Check-out Date</label>
+                    <input type="date" id="checkout" required>
+                </div>
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" required>
+                        <option value="">Select</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="special">Special Requests (Optional)</label>
+                    <input type="text" id="special" placeholder="Any special requests...">
+                </div>
+                <button type="submit" class="submit-btn">Submit Booking Request</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -724,6 +848,51 @@
         function scrollToRooms() {
             document.getElementById('rooms').scrollIntoView({ behavior: 'smooth' });
         }
+
+        function openBookingModal(roomName) {
+            document.getElementById('modalRoomName').textContent = `Book ${roomName}`;
+            document.getElementById('bookingModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                room: document.getElementById('modalRoomName').textContent.replace('Book ', ''),
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                checkin: document.getElementById('checkin').value,
+                checkout: document.getElementById('checkout').value,
+                guests: document.getElementById('guests').value,
+                special: document.getElementById('special').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Store booking in localStorage (in a real app, this would be sent to a server)
+            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(formData);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
+            closeModal();
+        });
 
         if (localStorage.getItem('darkMode') === 'true') {
             document.body.classList.add('dark-mode');
