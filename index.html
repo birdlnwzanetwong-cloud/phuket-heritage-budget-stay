@@ -474,16 +474,19 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            overflow-y: auto;
             animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background-color: white;
-            margin: 5% auto;
+            margin: 2rem auto;
             padding: 2rem;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             animation: slideIn 0.3s ease;
         }
@@ -861,10 +864,21 @@
             document.getElementById('bookingForm').reset();
         }
 
-        function sendBookingToLine(formData) {
-            const lineText = `Booking request:\nRoom: ${formData.room}\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCheck-in: ${formData.checkin}\nCheck-out: ${formData.checkout}\nGuests: ${formData.guests}\nSpecial: ${formData.special}`;
-            const lineUrl = `https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(lineText)}`;
-            window.open(lineUrl, '_blank');
+        async function sendBookingToLine(formData) {
+            const response = await fetch('/api/notify-line', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || 'LINE notify request failed');
+            }
+
+            return response.json();
         }
 
         // Close modal when clicking outside
@@ -876,7 +890,7 @@
         }
 
         // Handle form submission
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = {
@@ -891,13 +905,18 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Store booking in localStorage (in a real app, this would be sent to a server)
+            // Save locally in case you want a local record too
             let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
             bookings.push(formData);
             localStorage.setItem('bookings', JSON.stringify(bookings));
 
-            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. A LINE message window will open so you can send the details.`);
-            sendBookingToLine(formData);
+            try {
+                await sendBookingToLine(formData);
+                alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been sent to the owner via LINE.`);
+            } catch (error) {
+                alert(`Booking saved locally, but sending to LINE failed: ${error.message}`);
+            }
+
             closeModal();
         });
 
