@@ -861,6 +861,12 @@
             document.getElementById('bookingForm').reset();
         }
 
+        function sendBookingToLine(formData) {
+            const lineText = `Booking request:\nRoom: ${formData.room}\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nCheck-in: ${formData.checkin}\nCheck-out: ${formData.checkout}\nGuests: ${formData.guests}\nSpecial: ${formData.special}`;
+            const lineUrl = `https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(lineText)}`;
+            window.open(lineUrl, '_blank');
+        }
+
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('bookingModal');
@@ -890,7 +896,8 @@
             bookings.push(formData);
             localStorage.setItem('bookings', JSON.stringify(bookings));
 
-            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
+            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. A LINE message window will open so you can send the details.`);
+            sendBookingToLine(formData);
             closeModal();
         });
 
