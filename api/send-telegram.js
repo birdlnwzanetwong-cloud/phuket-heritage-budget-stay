@@ -7,39 +7,41 @@ export default async function handler(req, res) {
     }
 
     try {
-        // ✅ YOUR VALUES (already correct now)
-        const BOT_TOKEN = "8935653149:AAFQtSw5AW2teyszyW0m5wzuaKz3vKFDgzU";
+        const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
         const CHAT_ID = "6775142470";
 
-        const {
-            name,
-            phone,
-            email,
-            checkin,
-            checkout,
-            room,
-            guests,
-            requests,
-            source
-        } = req.body || {};
+        // 🔥 SUPER SAFE BODY PARSER (fixes your issue instantly)
+        const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+
+        const name = body.name || body.fullName || body.guestName || "N/A";
+        const phone = body.phone || body.phoneNumber || "N/A";
+        const email = body.email || body.userEmail || "N/A";
+
+        const checkin = body.checkin || body.check_in || "N/A";
+        const checkout = body.checkout || body.check_out || "N/A";
+
+        const room = body.room || body.roomType || "N/A";
+        const guests = body.guests || body.people || "N/A";
+
+        const requests = body.requests || body.message || "None";
 
         const message = `
 🏨 NEW BOOKING REQUEST
 
-👤 Guest Name: ${name || "N/A"}
-📞 Phone: ${phone || "N/A"}
-📧 Email: ${email || "N/A"}
+👤 Guest Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
 
-📅 Check-in: ${checkin || "N/A"}
-📅 Check-out: ${checkout || "N/A"}
+📅 Check-in: ${checkin}
+📅 Check-out: ${checkout}
 
-🛏️ Room Type: ${room || "N/A"}
-👥 Guests: ${guests || "N/A"}
+🛏️ Room Type: ${room}
+👥 Guests: ${guests}
 
 💬 Special Requests:
-${requests || "None"}
+${requests}
 
-🌐 Source: ${source || "Website Booking"}
+🌐 Source: Website Booking
         `.trim();
 
         const telegramResponse = await fetch(
@@ -50,7 +52,7 @@ ${requests || "None"}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    chat_id: CHAT_ID,   // ✅ YOUR ID IS HERE
+                    chat_id: CHAT_ID,
                     text: message
                 })
             }
