@@ -7,8 +7,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 👇 HARD CODE YOUR VALUES HERE
-        const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
+        // ✅ YOUR VALUES (already correct now)
+        const BOT_TOKEN = "8935653149:AAFQtSw5AW2teyszyW0m5wzuaKz3vKFDgzU";
         const CHAT_ID = "6775142470";
 
         const {
@@ -50,7 +50,7 @@ ${requests || "None"}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    chat_id: CHAT_ID,
+                    chat_id: CHAT_ID,   // ✅ YOUR ID IS HERE
                     text: message
                 })
             }
