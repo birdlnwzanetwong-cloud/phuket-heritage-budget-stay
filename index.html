@@ -850,6 +850,18 @@
             }
 
             async sendBookingToLine(bookingData) {
+                if (!this.channelAccessToken || this.channelAccessToken === 'YOUR_LINE_CHANNEL_ACCESS_TOKEN' || !this.hotelLineID || this.hotelLineID === 'YOUR_HOTEL_LINE_ID') {
+                    const missing = !this.channelAccessToken || this.channelAccessToken === 'YOUR_LINE_CHANNEL_ACCESS_TOKEN'
+                        ? 'Channel access token'
+                        : 'Hotel LINE ID';
+                    const errorMessage = `LINE booking not configured: ${missing} is missing or still a placeholder.`;
+                    console.error(errorMessage);
+                    return {
+                        success: false,
+                        error: errorMessage
+                    };
+                }
+
                 try {
                     const formattedMessage = this.formatBookingMessage(bookingData);
                     const response = await fetch(this.lineMessagingAPIUrl, {
@@ -870,7 +882,7 @@
                     });
 
                     if (!response.ok) {
-                        throw new Error(`LINE API error: ${response.statusText}`);
+                        throw new Error(`LINE API error: ${response.status} ${response.statusText}`);
                     }
 
                     return {
@@ -981,7 +993,22 @@
 
             const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
             if (!lineResult.success) {
-                alert(`❌ Error sending booking: ${lineResult.error}`);
+                console.error('LINE delivery failed:', lineResult.error);
+                alert(`❌ LINE booking failed: ${lineResult.error}. Sending via WhatsApp fallback now.`);
+
+                const whatsappMessage = encodeURIComponent(
+                    `Booking request:\n` +
+                    `Room: ${formData.room}\n` +
+                    `Name: ${formData.name}\n` +
+                    `Email: ${formData.email}\n` +
+                    `Phone: ${formData.phone}\n` +
+                    `Check-in: ${formData.checkin}\n` +
+                    `Check-out: ${formData.checkout}\n` +
+                    `Guests: ${formData.guests}\n` +
+                    `Special requests: ${formData.special || 'None'}`
+                );
+                window.open(`https://wa.me/66762345678?text=${whatsappMessage}`, '_blank');
+                return;
             }
 
             // Store booking in localStorage (in a real app, this would be sent to a server)
@@ -989,7 +1016,7 @@
             bookings.push(formData);
             localStorage.setItem('bookings', JSON.stringify(bookings));
 
-            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
+            alert(`✅ Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
             closeModal();
         });
 
