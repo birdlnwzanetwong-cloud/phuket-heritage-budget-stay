@@ -869,51 +869,24 @@
             }
 
             async sendBookingToLine(bookingData) {
-                if (!this.channelAccessToken || this.channelAccessToken === 'YOUR_LINE_CHANNEL_ACCESS_TOKEN' || !this.hotelLineID || this.hotelLineID === 'YOUR_HOTEL_LINE_ID') {
-                    const missing = !this.channelAccessToken || this.channelAccessToken === 'YOUR_LINE_CHANNEL_ACCESS_TOKEN'
-                        ? 'Channel access token'
-                        : 'Hotel LINE ID';
-                    const errorMessage = `LINE booking not configured: ${missing} is missing or still a placeholder.`;
-                    console.error(errorMessage);
-                    return {
-                        success: false,
-                        error: errorMessage
-                    };
-                }
-
+                // Send booking to serverless proxy which holds the LINE token server-side.
                 try {
-                    const formattedMessage = this.formatBookingMessage(bookingData);
-                    const response = await fetch(this.lineMessagingAPIUrl, {
+                    const resp = await fetch('/api/send-line', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.channelAccessToken}`
-                        },
-                        body: JSON.stringify({
-                            to: this.hotelLineID,
-                            messages: [
-                                {
-                                    type: 'text',
-                                    text: formattedMessage
-                                }
-                            ]
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookingData)
                     });
 
-                    if (!response.ok) {
-                        throw new Error(`LINE API error: ${response.status} ${response.statusText}`);
+                    const json = await resp.json().catch(() => ({}));
+                    if (!resp.ok) {
+                        const err = json.error || `HTTP ${resp.status}`;
+                        throw new Error(err);
                     }
 
-                    return {
-                        success: true,
-                        message: 'Booking sent to hotel successfully'
-                    };
-                } catch (error) {
-                    console.error('Error sending booking to LINE:', error);
-                    return {
-                        success: false,
-                        error: error.message
-                    };
+                    return { success: true };
+                } catch (err) {
+                    console.error('Proxy /api/send-line error:', err);
+                    return { success: false, error: err.message };
                 }
             }
 
@@ -950,9 +923,8 @@
             }
         }
 
-        const CHANNEL_ACCESS_TOKEN = 'YOUR_LINE_CHANNEL_ACCESS_TOKEN';
-        const HOTEL_LINE_ID = 'YOUR_HOTEL_LINE_ID';
-        const lineBooking = new LineBookingSystem(CHANNEL_ACCESS_TOKEN, HOTEL_LINE_ID);
+        // LINE credentials are kept server-side in Vercel env vars. Client calls /api/send-line.
+        const lineBooking = new LineBookingSystem();
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
