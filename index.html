@@ -803,40 +803,52 @@
             </div>
             <form id="bookingForm">
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" required>
+                    <label>Guest Name *</label>
+                    <input type="text" id="guestName" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
+                    <label>Phone Number *</label>
                     <input type="tel" id="phone" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="checkin">Check-in Date</label>
-                    <input type="date" id="checkin" required>
+                    <label>Email *</label>
+                    <input type="email" id="email" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="checkout">Check-out Date</label>
-                    <input type="date" id="checkout" required>
+                    <label>Check-in Date *</label>
+                    <input type="date" id="checkInDate" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="guests">Number of Guests</label>
-                    <select id="guests" required>
-                        <option value="">Select</option>
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
+                    <label>Check-out Date *</label>
+                    <input type="date" id="checkOutDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Room Type *</label>
+                    <select id="roomType" required>
+                        <option value="">Select a room</option>
+                        <option value="Single">Single Room</option>
+                        <option value="Double">Double Room</option>
+                        <option value="Suite">Suite</option>
+                        <option value="Family">Family Room</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="special">Special Requests (Optional)</label>
-                    <input type="text" id="special" placeholder="Any special requests...">
+                    <label>Number of Guests *</label>
+                    <input type="number" id="numGuests" min="1" required>
                 </div>
-                <button type="submit" class="submit-btn">Submit Booking Request</button>
+
+                <div class="form-group">
+                    <label>Special Requests</label>
+                    <textarea id="specialRequests" placeholder="High floor, crib needed, etc..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Book Now</button>
             </form>
         </div>
     </div>
@@ -913,14 +925,14 @@
                     e.preventDefault();
 
                     const bookingData = {
-                        guestName: document.getElementById('name')?.value,
+                        guestName: document.getElementById('guestName')?.value,
                         phone: document.getElementById('phone')?.value,
                         email: document.getElementById('email')?.value,
-                        checkInDate: document.getElementById('checkin')?.value,
-                        checkOutDate: document.getElementById('checkout')?.value,
-                        roomType: document.getElementById('modalRoomName')?.textContent.replace('Book ', ''),
-                        numGuests: document.getElementById('guests')?.value,
-                        specialRequests: document.getElementById('special')?.value
+                        checkInDate: document.getElementById('checkInDate')?.value,
+                        checkOutDate: document.getElementById('checkOutDate')?.value,
+                        roomType: document.getElementById('roomType')?.value || document.getElementById('modalRoomName')?.textContent.replace('Book ', ''),
+                        numGuests: document.getElementById('numGuests')?.value,
+                        specialRequests: document.getElementById('specialRequests')?.value
                     };
 
                     const result = await this.sendBookingToLine(bookingData);
@@ -946,6 +958,10 @@
 
         function openBookingModal(roomName) {
             document.getElementById('modalRoomName').textContent = `Book ${roomName}`;
+            const roomTypeSelect = document.getElementById('roomType');
+            if (roomTypeSelect) {
+                roomTypeSelect.value = roomName.includes('Family') ? 'Family' : roomName.includes('Double') ? 'Double' : roomName.includes('Single') ? 'Single' : '';
+            }
             document.getElementById('bookingModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -969,26 +985,26 @@
             e.preventDefault();
             
             const formData = {
-                room: document.getElementById('modalRoomName').textContent.replace('Book ', ''),
-                name: document.getElementById('name').value,
+                room: document.getElementById('roomType').value || document.getElementById('modalRoomName').textContent.replace('Book ', ''),
+                guestName: document.getElementById('guestName').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
-                checkin: document.getElementById('checkin').value,
-                checkout: document.getElementById('checkout').value,
-                guests: document.getElementById('guests').value,
-                special: document.getElementById('special').value,
+                checkInDate: document.getElementById('checkInDate').value,
+                checkOutDate: document.getElementById('checkOutDate').value,
+                numGuests: document.getElementById('numGuests').value,
+                specialRequests: document.getElementById('specialRequests').value,
                 timestamp: new Date().toISOString()
             };
 
             const lineBookingData = {
-                guestName: formData.name,
+                guestName: formData.guestName,
                 phone: formData.phone,
                 email: formData.email,
-                checkInDate: formData.checkin,
-                checkOutDate: formData.checkout,
+                checkInDate: formData.checkInDate,
+                checkOutDate: formData.checkOutDate,
                 roomType: formData.room,
-                numGuests: formData.guests,
-                specialRequests: formData.special
+                numGuests: formData.numGuests,
+                specialRequests: formData.specialRequests
             };
 
             const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
