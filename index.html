@@ -474,19 +474,16 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            overflow-y: auto;
             animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background-color: white;
-            margin: 2rem auto;
+            margin: 5% auto;
             padding: 2rem;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            max-height: calc(100vh - 4rem);
-            overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             animation: slideIn 0.3s ease;
         }
@@ -843,6 +840,87 @@
     </div>
 
     <script>
+        class LineBookingSystem {
+            constructor(channelAccessToken, hotelLineID) {
+                this.channelAccessToken = channelAccessToken;
+                this.hotelLineID = hotelLineID;
+                this.lineMessagingAPIUrl = 'https://api.line.me/v2/bot/message/push';
+            }
+
+            async sendBookingToLine(bookingData) {
+                try {
+                    const formattedMessage = this.formatBookingMessage(bookingData);
+                    const response = await fetch(this.lineMessagingAPIUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.channelAccessToken}`
+                        },
+                        body: JSON.stringify({
+                            to: this.hotelLineID,
+                            messages: [
+                                {
+                                    type: 'text',
+                                    text: formattedMessage
+                                }
+                            ]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`LINE API error: ${response.statusText}`);
+                    }
+
+                    return {
+                        success: true,
+                        message: 'Booking sent to hotel successfully'
+                    };
+                } catch (error) {
+                    console.error('Error sending booking to LINE:', error);
+                    return {
+                        success: false,
+                        error: error.message
+                    };
+                }
+            }
+
+            formatBookingMessage(bookingData) {
+                return `🏨 NEW BOOKING REQUEST\n\n👤 Guest Name: ${bookingData.guestName || 'N/A'}\n📞 Phone: ${bookingData.phone || 'N/A'}\n📧 Email: ${bookingData.email || 'N/A'}\n📅 Check-in: ${bookingData.checkInDate || 'N/A'}\n📅 Check-out: ${bookingData.checkOutDate || 'N/A'}\n🛏️ Room Type: ${bookingData.roomType || 'N/A'}\n👥 Number of Guests: ${bookingData.numGuests || 'N/A'}\n💬 Special Requests: ${bookingData.specialRequests || 'None'}\n🌐 Source: Direct Website Booking`;
+            }
+
+            attachToForm(formId) {
+                const form = document.getElementById(formId);
+                if (!form) {
+                    console.error(`Form with ID "${formId}" not found`);
+                    return;
+                }
+
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const bookingData = {
+                        guestName: document.getElementById('name')?.value,
+                        phone: document.getElementById('phone')?.value,
+                        email: document.getElementById('email')?.value,
+                        checkInDate: document.getElementById('checkin')?.value,
+                        checkOutDate: document.getElementById('checkout')?.value,
+                        roomType: document.getElementById('modalRoomName')?.textContent.replace('Book ', ''),
+                        numGuests: document.getElementById('guests')?.value,
+                        specialRequests: document.getElementById('special')?.value
+                    };
+
+                    const result = await this.sendBookingToLine(bookingData);
+                    if (!result.success) {
+                        alert(`❌ Error sending booking: ${result.error}`);
+                    }
+                });
+            }
+        }
+
+        const CHANNEL_ACCESS_TOKEN = 'YOUR_LINE_CHANNEL_ACCESS_TOKEN';
+        const HOTEL_LINE_ID = 'YOUR_HOTEL_LINE_ID';
+        const lineBooking = new LineBookingSystem(CHANNEL_ACCESS_TOKEN, HOTEL_LINE_ID);
+
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
@@ -862,23 +940,6 @@
             document.getElementById('bookingModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             document.getElementById('bookingForm').reset();
-        }
-
-        async function sendBookingToLine(formData) {
-            const response = await fetch('/api/notify-line', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || 'LINE notify request failed');
-            }
-
-            return response.json();
         }
 
         // Close modal when clicking outside
@@ -905,18 +966,28 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Save locally in case you want a local record too
+            const lineBookingData = {
+                guestName: formData.name,
+                phone: formData.phone,
+                email: formData.email,
+                checkInDate: formData.checkin,
+                checkOutDate: formData.checkout,
+                roomType: formData.room,
+                numGuests: formData.guests,
+                specialRequests: formData.special
+            };
+
+            const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
+            if (!lineResult.success) {
+                alert(`❌ Error sending booking: ${lineResult.error}`);
+            }
+
+            // Store booking in localStorage (in a real app, this would be sent to a server)
             let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
             bookings.push(formData);
             localStorage.setItem('bookings', JSON.stringify(bookings));
 
-            try {
-                await sendBookingToLine(formData);
-                alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been sent to the owner via LINE.`);
-            } catch (error) {
-                alert(`Booking saved locally, but sending to LINE failed: ${error.message}`);
-            }
-
+            alert(`Thank you ${formData.name}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
             closeModal();
         });
 
