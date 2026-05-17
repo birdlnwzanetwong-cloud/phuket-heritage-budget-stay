@@ -854,158 +854,183 @@
     </div>
 
     <script>
-        class LineBookingSystem {
-            async sendBookingToLine(bookingData) {
-                try {
-                    const resp = await fetch('/api/send-line', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingData)
-                    });
-
-                    const json = await resp.json().catch(() => ({}));
-                    if (!resp.ok) {
-                        const err = json.error || `HTTP ${resp.status}`;
-                        throw new Error(err);
-                    }
-
-                    return { success: true, data: json };
-                } catch (err) {
-                    console.error('Proxy /api/send-line error:', err);
-                    return { success: false, error: err.message };
-                }
-            }
-
-            formatBookingMessage(bookingData) {
-                return `🏨 NEW BOOKING REQUEST\n\n👤 Guest Name: ${bookingData.guestName || 'N/A'}\n📞 Phone: ${bookingData.phone || 'N/A'}\n📧 Email: ${bookingData.email || 'N/A'}\n📅 Check-in: ${bookingData.checkInDate || 'N/A'}\n📅 Check-out: ${bookingData.checkOutDate || 'N/A'}\n🛏️ Room Type: ${bookingData.roomType || 'N/A'}\n👥 Number of Guests: ${bookingData.numGuests || 'N/A'}\n💬 Special Requests: ${bookingData.specialRequests || 'None'}\n🌐 Source: Direct Website Booking`;
-            }
-
-            attachToForm(formId) {
-                const form = document.getElementById(formId);
-                if (!form) {
-                    console.error(`Form with ID "${formId}" not found`);
-                    return;
-                }
-
-                form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-
-                    const bookingData = {
-                        guestName: document.getElementById('guestName')?.value,
-                        phone: document.getElementById('phone')?.value,
-                        email: document.getElementById('email')?.value,
-                        checkInDate: document.getElementById('checkInDate')?.value,
-                        checkOutDate: document.getElementById('checkOutDate')?.value,
-                        roomType: document.getElementById('roomType')?.value || document.getElementById('modalRoomName')?.textContent.replace('Book ', ''),
-                        numGuests: document.getElementById('numGuests')?.value,
-                        specialRequests: document.getElementById('specialRequests')?.value
-                    };
-
-                    const result = await this.sendBookingToLine(bookingData);
-                    if (!result.success) {
-                        alert(`❌ Error sending booking: ${result.error}`);
-                    }
+    class TelegramBookingSystem {
+        async sendBookingToTelegram(bookingData) {
+            try {
+                const resp = await fetch('/api/send-telegram', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({
+                        message: this.formatBookingMessage(bookingData)
+                    })
                 });
+
+                const json = await resp.json().catch(() => ({}));
+
+                if (!resp.ok) {
+                    const err = json.error || `HTTP ${resp.status}`;
+                    throw new Error(err);
+                }
+
+                return { success: true, data: json };
+
+            } catch (err) {
+                console.error('Telegram API error:', err);
+                return { success: false, error: err.message };
             }
         }
 
-        // LINE credentials are kept server-side in Vercel env vars. Client calls /api/send-line.
-        const lineBooking = new LineBookingSystem();
+        formatBookingMessage(bookingData) {
+            return `
+🏨 NEW BOOKING REQUEST
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+👤 Guest Name: ${bookingData.guestName || 'N/A'}
+📞 Phone: ${bookingData.phone || 'N/A'}
+📧 Email: ${bookingData.email || 'N/A'}
+
+📅 Check-in: ${bookingData.checkInDate || 'N/A'}
+📅 Check-out: ${bookingData.checkOutDate || 'N/A'}
+
+🛏️ Room Type: ${bookingData.roomType || 'N/A'}
+👥 Guests: ${bookingData.numGuests || 'N/A'}
+
+💬 Special Requests:
+${bookingData.specialRequests || 'None'}
+
+🌐 Source: Website Booking
+            `.trim();
+        }
+    }
+
+    // TELEGRAM SYSTEM
+    const telegramBooking = new TelegramBookingSystem();
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem(
+            'darkMode',
+            document.body.classList.contains('dark-mode')
+        );
+    }
+
+    function scrollToRooms() {
+        document.getElementById('rooms')
+            .scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openBookingModal(roomName) {
+        document.getElementById('modalRoomName').textContent = `Book ${roomName}`;
+
+        const roomTypeSelect = document.getElementById('roomType');
+
+        if (roomTypeSelect) {
+            roomTypeSelect.value =
+                roomName.includes('Family') ? 'Family' :
+                roomName.includes('Double') ? 'Double' :
+                roomName.includes('Single') ? 'Single' :
+                '';
         }
 
-        function scrollToRooms() {
-            document.getElementById('rooms').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('bookingModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+
+        const form = document.getElementById('bookingForm');
+
+        if (form) {
+            form.reset();
         }
+    }
 
-        function openBookingModal(roomName) {
-            document.getElementById('modalRoomName').textContent = `Book ${roomName}`;
-            const roomTypeSelect = document.getElementById('roomType');
-            if (roomTypeSelect) {
-                roomTypeSelect.value = roomName.includes('Family') ? 'Family' : roomName.includes('Double') ? 'Double' : roomName.includes('Single') ? 'Single' : '';
-            }
-            document.getElementById('bookingModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+    // CLOSE MODAL WHEN CLICKING OUTSIDE
+    window.onclick = function(event) {
+        const modal = document.getElementById('bookingModal');
 
-        function closeModal() {
-            document.getElementById('bookingModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-            document.getElementById('bookingForm').reset();
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('bookingModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        // Handle form submission
-        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                room: document.getElementById('roomType').value || document.getElementById('modalRoomName').textContent.replace('Book ', ''),
-                guestName: document.getElementById('guestName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                checkInDate: document.getElementById('checkInDate').value,
-                checkOutDate: document.getElementById('checkOutDate').value,
-                numGuests: document.getElementById('numGuests').value,
-                specialRequests: document.getElementById('specialRequests').value,
-                timestamp: new Date().toISOString()
-            };
-
-            const lineBookingData = {
-                guestName: formData.guestName,
-                phone: formData.phone,
-                email: formData.email,
-                checkInDate: formData.checkInDate,
-                checkOutDate: formData.checkOutDate,
-                roomType: formData.room,
-                numGuests: formData.numGuests,
-                specialRequests: formData.specialRequests
-            };
-
-            const sendWhatsappFallback = () => {
-                const whatsappMessage = encodeURIComponent(
-                    `Booking request:\n` +
-                    `Room: ${formData.room}\n` +
-                    `Name: ${formData.guestName}\n` +
-                    `Email: ${formData.email}\n` +
-                    `Phone: ${formData.phone}\n` +
-                    `Check-in: ${formData.checkInDate}\n` +
-                    `Check-out: ${formData.checkOutDate}\n` +
-                    `Guests: ${formData.numGuests}\n` +
-                    `Special requests: ${formData.specialRequests || 'None'}`
-                );
-                window.open(`https://wa.me/66762345678?text=${whatsappMessage}`, '_blank');
-            };
-
-            const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
-            if (!lineResult.success) {
-                console.error('LINE delivery failed:', lineResult.error);
-                alert(`❌ LINE booking failed: ${lineResult.error}. Sending via WhatsApp fallback now.`);
-                sendWhatsappFallback();
-            }
-
-            // Store booking in localStorage (in a real app, this would be sent to a server)
-            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-            bookings.push(formData);
-            localStorage.setItem('bookings', JSON.stringify(bookings));
-
-            alert(`✅ Thank you ${formData.guestName}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
+        if (event.target === modal) {
             closeModal();
-        });
-
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
         }
+    };
+
+    // FORM SUBMIT
+    document.getElementById('bookingForm')
+        .addEventListener('submit', async function(e) {
+
+        e.preventDefault();
+
+        const formData = {
+            room: document.getElementById('roomType').value ||
+                  document.getElementById('modalRoomName')
+                  .textContent.replace('Book ', ''),
+
+            guestName: document.getElementById('guestName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            checkInDate: document.getElementById('checkInDate').value,
+            checkOutDate: document.getElementById('checkOutDate').value,
+            numGuests: document.getElementById('numGuests').value,
+            specialRequests: document.getElementById('specialRequests').value,
+            timestamp: new Date().toISOString()
+        };
+
+        const telegramBookingData = {
+            guestName: formData.guestName,
+            phone: formData.phone,
+            email: formData.email,
+            checkInDate: formData.checkInDate,
+            checkOutDate: formData.checkOutDate,
+            roomType: formData.room,
+            numGuests: formData.numGuests,
+            specialRequests: formData.specialRequests
+        };
+
+        // SEND TO TELEGRAM
+        const telegramResult =
+            await telegramBooking.sendBookingToTelegram(
+                telegramBookingData
+            );
+
+        if (!telegramResult.success) {
+            console.error(
+                'Telegram delivery failed:',
+                telegramResult.error
+            );
+
+            alert(
+                `❌ Telegram booking failed: ${telegramResult.error}`
+            );
+
+            return;
+        }
+
+        // SAVE LOCAL
+        let bookings = JSON.parse(
+            localStorage.getItem('bookings') || '[]'
+        );
+
+        bookings.push(formData);
+
+        localStorage.setItem(
+            'bookings',
+            JSON.stringify(bookings)
+        );
+
+        alert(
+            `✅ Thank you ${formData.guestName}! Your booking request for ${formData.room} has been submitted successfully.`
+        );
+
+        closeModal();
+    });
+
+    // LOAD DARK MODE
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
     </script>
 </body>
 </html>
