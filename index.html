@@ -855,21 +855,7 @@
 
     <script>
         class LineBookingSystem {
-            constructor(channelAccessToken, hotelLineID) {
-                this.channelAccessToken = channelAccessToken;
-                this.hotelLineID = hotelLineID;
-                this.lineMessagingAPIUrl = 'https://api.line.me/v2/bot/message/push';
-            }
-
-            isConfigured() {
-                return this.channelAccessToken
-                    && this.channelAccessToken !== 'YOUR_LINE_CHANNEL_ACCESS_TOKEN'
-                    && this.hotelLineID
-                    && this.hotelLineID !== 'YOUR_HOTEL_LINE_ID';
-            }
-
             async sendBookingToLine(bookingData) {
-                // Send booking to serverless proxy which holds the LINE token server-side.
                 try {
                     const resp = await fetch('/api/send-line', {
                         method: 'POST',
@@ -883,7 +869,7 @@
                         throw new Error(err);
                     }
 
-                    return { success: true };
+                    return { success: true, data: json };
                 } catch (err) {
                     console.error('Proxy /api/send-line error:', err);
                     return { success: false, error: err.message };
@@ -1001,16 +987,11 @@
                 window.open(`https://wa.me/66762345678?text=${whatsappMessage}`, '_blank');
             };
 
-            if (!lineBooking.isConfigured()) {
-                alert('LINE is not configured yet. Sending booking via WhatsApp fallback.');
+            const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
+            if (!lineResult.success) {
+                console.error('LINE delivery failed:', lineResult.error);
+                alert(`❌ LINE booking failed: ${lineResult.error}. Sending via WhatsApp fallback now.`);
                 sendWhatsappFallback();
-            } else {
-                const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
-                if (!lineResult.success) {
-                    console.error('LINE delivery failed:', lineResult.error);
-                    alert(`❌ LINE booking failed: ${lineResult.error}. Sending via WhatsApp fallback now.`);
-                    sendWhatsappFallback();
-                }
             }
 
             // Store booking in localStorage (in a real app, this would be sent to a server)
