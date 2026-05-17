@@ -1,631 +1,1011 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phuket Heritage Budget Stay | Authentic Old Town Experience</title>
+    <meta name="description" content="Experience REAL Phuket in Old Town. Budget-friendly rooms, authentic street food, local temples, historical charm. No beach resort BS. Pure Phuket culture.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<title>Phuket Heritage Budget Stay</title>
+        :root {
+            --primary: #8b4513;
+            --accent: #d4a574;
+            --light: #f5e6d3;
+            --dark: #3d2817;
+            --text: #2d1810;
+            --text-light: #666;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        body.dark-mode {
+            --primary: #5a3a1a;
+            --light: #2d1810;
+            --text: #f5e6d3;
+            --text-light: #d4a574;
+        }
 
-:root{
-    --primary:#8b4513;
-    --accent:#d4a574;
-    --light:#f5e6d3;
-    --dark:#3d2817;
-    --text:#2d1810;
-    --text-light:#666;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background: var(--light);
+            transition: all 0.3s ease;
+        }
 
-body.dark-mode{
-    --light:#1f140d;
-    --text:#f5e6d3;
-    --text-light:#d4a574;
-}
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background: var(--primary);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
 
-body{
-    font-family:Arial,sans-serif;
-    background:var(--light);
-    color:var(--text);
-    transition:0.3s;
-}
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
 
-/* NAV */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
 
-nav{
-    background:var(--primary);
-    color:white;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:1rem 5%;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
 
-.logo{
-    font-size:1.5rem;
-    font-weight:bold;
-}
+        nav a:hover {
+            color: var(--accent);
+        }
 
-nav ul{
-    display:flex;
-    gap:1.5rem;
-    list-style:none;
-}
+        .dark-toggle {
+            background: var(--accent);
+            border: none;
+            color: var(--primary);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
 
-nav a{
-    color:white;
-    text-decoration:none;
-}
+        .dark-toggle:hover {
+            transform: scale(1.05);
+        }
 
-.dark-toggle{
-    border:none;
-    background:var(--accent);
-    color:black;
-    padding:0.7rem 1.2rem;
-    border-radius:50px;
-    cursor:pointer;
-}
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            color: white;
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-/* HERO */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="dots" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="1200" height="600" fill="url(%23dots)"/></svg>');
+            opacity: 0.5;
+        }
 
-.hero{
-    padding:6rem 5%;
-    text-align:center;
-    background:linear-gradient(135deg,#8b4513,#a0522d);
-    color:white;
-}
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInDown 1s ease;
+        }
 
-.hero h1{
-    font-size:3rem;
-    margin-bottom:1rem;
-}
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
 
-.hero p{
-    font-size:1.2rem;
-    margin-bottom:2rem;
-}
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
 
-.cta-button{
-    background:var(--accent);
-    color:black;
-    border:none;
-    padding:1rem 2rem;
-    border-radius:50px;
-    cursor:pointer;
-    font-weight:bold;
-}
+        .cta-button {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(212, 165, 116, 0.4);
+        }
 
-/* SECTIONS */
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212, 165, 116, 0.6);
+        }
 
-section{
-    padding:4rem 5%;
-}
+        /* Rooms Section */
+        .rooms {
+            padding: 4rem 5%;
+            background: var(--light);
+        }
 
-.section-title{
-    text-align:center;
-    margin-bottom:3rem;
-    color:var(--primary);
-    font-size:2rem;
-}
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--primary);
+        }
 
-/* ROOM GRID */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
 
-.room-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:2rem;
-}
+        .room-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
 
-.room-card{
-    background:white;
-    border-radius:15px;
-    overflow:hidden;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
+        .room-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
 
-.room-image{
-    height:220px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:4rem;
-    background:linear-gradient(135deg,#8b4513,#a0522d);
-    color:white;
-}
+        .room-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+        }
 
-.room-content{
-    padding:2rem;
-}
+        .room-content {
+            padding: 2rem;
+        }
 
-.room-name{
-    font-size:1.4rem;
-    margin-bottom:0.5rem;
-}
+        .room-name {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
 
-.room-price{
-    color:var(--accent);
-    font-weight:bold;
-    margin-bottom:1rem;
-}
+        .room-price {
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
 
-.room-description{
-    margin-bottom:1rem;
-    color:var(--text-light);
-}
+        .room-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
 
-.room-features{
-    display:flex;
-    gap:0.5rem;
-    flex-wrap:wrap;
-    margin-bottom:1rem;
-}
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
 
-.feature-tag{
-    background:var(--light);
-    padding:0.4rem 0.8rem;
-    border-radius:20px;
-    font-size:0.85rem;
-}
+        .feature-tag {
+            background: var(--light);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
 
-/* FOOTER */
+        /* Experience Section */
+        .experience {
+            padding: 4rem 5%;
+            background: white;
+        }
 
-footer{
-    background:var(--primary);
-    color:white;
-    text-align:center;
-    padding:2rem;
-}
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
 
-/* MODAL */
+        .experience-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background: var(--light);
+            transition: all 0.3s;
+            border-left: 5px solid var(--primary);
+        }
 
-.modal{
-    display:none;
-    position:fixed;
-    z-index:1000;
-    left:0;
-    top:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-}
+        .experience-card:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
 
-.modal-content{
-    background:white;
-    width:90%;
-    max-width:500px;
-    margin:5% auto;
-    padding:2rem;
-    border-radius:15px;
-}
+        .experience-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
 
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:1.5rem;
-}
+        .experience-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
 
-.close{
-    font-size:2rem;
-    cursor:pointer;
-}
+        .experience-desc {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
 
-.form-group{
-    margin-bottom:1rem;
-}
+        /* Location Section */
+        .location {
+            padding: 4rem 5%;
+            background: var(--light);
+        }
 
-.form-group label{
-    display:block;
-    margin-bottom:0.5rem;
-}
+        .location-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
 
-.form-group input,
-.form-group select,
-textarea{
-    width:100%;
-    padding:0.8rem;
-    border:2px solid #ddd;
-    border-radius:8px;
-    font-size:1rem;
-}
+        .location-info h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
 
-textarea{
-    min-height:120px;
-    resize:vertical;
-}
+        .location-info p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
 
-.submit-btn{
-    width:100%;
-    background:var(--accent);
-    border:none;
-    padding:1rem;
-    border-radius:50px;
-    cursor:pointer;
-    font-weight:bold;
-}
+        .map-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
 
-/* WHATSAPP */
+        /* Why Choose Us */
+        .why-us {
+            padding: 4rem 5%;
+            background: white;
+        }
 
-.whatsapp-widget{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    width:60px;
-    height:60px;
-    background:#25d366;
-    border-radius:50%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:2rem;
-}
+        .why-us-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
 
-.whatsapp-widget a{
-    color:white;
-    text-decoration:none;
-}
+        .why-card {
+            padding: 2rem;
+            border-radius: 10px;
+            background: var(--light);
+            text-align: center;
+        }
 
-/* MOBILE */
+        .why-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
 
-@media(max-width:768px){
+        .why-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
 
-    nav{
-        flex-direction:column;
-        gap:1rem;
-    }
+        .why-text {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
 
-    nav ul{
-        flex-wrap:wrap;
-        justify-content:center;
-    }
+        /* Reviews */
+        .reviews {
+            padding: 4rem 5%;
+            background: var(--light);
+        }
 
-    .hero h1{
-        font-size:2rem;
-    }
-}
-</style>
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .stars {
+            color: #f39c12;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            color: var(--text-light);
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .reviewer-name {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 5%;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 2rem;
+        }
+
+        /* WhatsApp Widget */
+        .whatsapp-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+            z-index: 50;
+        }
+
+        .whatsapp-widget:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-widget a {
+            color: white;
+            font-size: 1.8rem;
+            text-decoration: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4); }
+            50% { box-shadow: 0 5px 30px rgba(37, 211, 102, 0.8); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 165, 116, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">🏛️ Phuket Heritage</div>
+        <ul>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#location">Location</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+        </ul>
+        <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
+    </nav>
 
-<nav>
-    <div class="logo">🏛️ Phuket Heritage</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Escape the Tourist Trail</h1>
+            <p>Experience Authentic Phuket in Historic Old Town</p>
+            <button class="cta-button" onclick="scrollToRooms()">Book Your Authentic Stay</button>
+        </div>
+    </section>
 
-    <ul>
-        <li><a href="#rooms">Rooms</a></li>
-        <li><a href="#reviews">Reviews</a></li>
-    </ul>
+    <!-- Rooms Section -->
+    <section class="rooms" id="rooms">
+        <h2 class="section-title">Our Rooms</h2>
+        <div class="room-grid">
+            <div class="room-card">
+                <div class="room-image">🛏️</div>
+                <div class="room-content">
+                    <h3 class="room-name">Budget Single</h3>
+                    <div class="room-price">฿599/night</div>
+                    <p class="room-description">Clean, simple room perfect for solo travelers. No frills, no pretense. Just authentic Phuket experience.</p>
+                    <div class="room-features">
+                        <span class="feature-tag">15 m²</span>
+                        <span class="feature-tag">WiFi</span>
+                        <span class="feature-tag">Fan</span>
+                    </div>
+                    <button class="cta-button" onclick="openBookingModal('Budget Single')">Reserve Now</button>
+                </div>
+            </div>
 
-    <button class="dark-toggle" onclick="toggleDarkMode()">
-        🌙 Dark
-    </button>
-</nav>
+            <div class="room-card">
+                <div class="room-image">👥</div>
+                <div class="room-content">
+                    <h3 class="room-name">Budget Double</h3>
+                    <div class="room-price">฿799/night</div>
+                    <p class="room-description">Cozy double room in the heart of Old Town. Wake up to the sounds of authentic Phuket street life.</p>
+                    <div class="room-features">
+                        <span class="feature-tag">20 m²</span>
+                        <span class="feature-tag">Old Town View</span>
+                        <span class="feature-tag">A/C</span>
+                    </div>
+                    <button class="cta-button" onclick="openBookingModal('Budget Double')">Reserve Now</button>
+                </div>
+            </div>
 
-<section class="hero">
-    <h1>Escape the Tourist Trail</h1>
-    <p>Experience Authentic Phuket in Historic Old Town</p>
+            <div class="room-card">
+                <div class="room-image">👨‍👩‍👧</div>
+                <div class="room-content">
+                    <h3 class="room-name">Family Room</h3>
+                    <div class="room-price">฿1,099/night</div>
+                    <p class="room-description">Spacious family room. Perfect for travelers wanting to experience real Phuket with loved ones.</p>
+                    <div class="room-features">
+                        <span class="feature-tag">35 m²</span>
+                        <span class="feature-tag">2 Beds</span>
+                        <span class="feature-tag">Street View</span>
+                    </div>
+                    <button class="cta-button" onclick="openBookingModal('Family Room')">Reserve Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <button class="cta-button" onclick="scrollToRooms()">
-        Book Your Stay
-    </button>
-</section>
+    <!-- Experience Section -->
+    <section class="experience" id="experience">
+        <h2 class="section-title">Authentic Phuket Experiences</h2>
+        <div class="experience-grid">
+            <div class="experience-card">
+                <div class="experience-icon">🍜</div>
+                <div class="experience-name">Street Food Tours</div>
+                <div class="experience-desc">Wake early for local breakfast. Follow the crowds to hidden gem food stalls. Taste real Phuket cuisine.</div>
+            </div>
+            <div class="experience-card">
+                <div class="experience-icon">🏯</div>
+                <div class="experience-name">Historic Temples</div>
+                <div class="experience-desc">Walk to centuries-old temples. Experience Thai spirituality. No tourist crowds. Just authentic worship.</div>
+            </div>
+            <div class="experience-card">
+                <div class="experience-icon">🛍️</div>
+                <div class="experience-name">Local Markets</div>
+                <div class="experience-desc">Browse vibrant markets. Buy fresh produce like locals. Chat with vendors. Real cultural exchange.</div>
+            </div>
+            <div class="experience-card">
+                <div class="experience-icon">🚶</div>
+                <div class="experience-name">Walking Tours</div>
+                <div class="experience-desc">Explore Old Town streets on foot. Discover hidden alleyways. See Phuket's real heart.</div>
+            </div>
+            <div class="experience-card">
+                <div class="experience-icon">📸</div>
+                <div class="experience-name">Photography Spots</div>
+                <div class="experience-desc">Find Instagram-worthy locations locals use. Vibrant doors, colonial buildings, street art.</div>
+            </div>
+            <div class="experience-card">
+                <div class="experience-icon">☕</div>
+                <div class="experience-name">Local Cafés</div>
+                <div class="experience-desc">Sip coffee where Thais gather. Meet locals. Hear real Phuket stories. No tourist prices.</div>
+            </div>
+        </div>
+    </section>
 
-<section id="rooms">
-    <h2 class="section-title">Our Rooms</h2>
+    <!-- Location Section -->
+    <section class="location" id="location">
+        <h2 class="section-title">In the Heart of Historic Phuket</h2>
+        <div class="location-grid">
+            <div class="location-info">
+                <h3>Phuket Old Town - Where Real Phuket Lives</h3>
+                <p><strong>Address:</strong> 42 Thalang Road, Phuket Old Town 83000</p>
+                <p><strong>What's Nearby (Walking Distance):</strong></p>
+                <p>✓ Phuket Town Market (5 min)</p>
+                <p>✓ Put Phaya Thai Temple (3 min)</p>
+                <p>✓ Sino-Portuguese Architecture (2 min)</p>
+                <p>✓ Local Street Food Stalls (1 min)</p>
+                <p>✓ Thai Hua Museum (7 min)</p>
+                <p><strong>NOT Here:</strong> Beaches, resorts, party zones, Western bars</p>
+                <p><strong>ACTUALLY Here:</strong> Real Phuket. Authentic culture. Local life. Budget prices.</p>
+                <button class="cta-button" onclick="alert('Directions to Old Town')">Get Directions</button>
+            </div>
+            <div class="map-placeholder">
+                🗺️ Google Maps - Phuket Old Town
+            </div>
+        </div>
+    </section>
 
-    <div class="room-grid">
+    <!-- Why Choose Us -->
+    <section class="why-us">
+        <h2 class="section-title">Why Phuket Heritage Budget Stay?</h2>
+        <div class="why-us-grid">
+            <div class="why-card">
+                <div class="why-icon">💰</div>
+                <div class="why-title">Budget Prices</div>
+                <div class="why-text">฿599-1,099/night. Affordable. No resort markups. Just honest prices for real travelers.</div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🎭</div>
+                <div class="why-title">Authentic Culture</div>
+                <div class="why-text">Live like locals. Experience real Phuket. Not a tourist resort. Just real life.</div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🍽️</div>
+                <div class="why-title">Street Food Paradise</div>
+                <div class="why-text">Walking distance to best street food in Phuket. No tourist restaurants. Just real local food.</div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">📍</div>
+                <div class="why-title">Historic Location</div>
+                <div class="why-text">Heart of Old Town. Surrounded by history. Beautiful colonial architecture. No beach noise.</div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🤝</div>
+                <div class="why-title">Real Hospitality</div>
+                <div class="why-text">Local owners who actually care. Not corporate. Not chains. Just personal service.</div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">🚫</div>
+                <div class="why-title">No Tourist Traps</div>
+                <div class="why-text">No beach resort prices. No fake experiences. No Western chains. Just Phuket.</div>
+            </div>
+        </div>
+    </section>
 
-        <div class="room-card">
-            <div class="room-image">🛏️</div>
+    <!-- Reviews Section -->
+    <section class="reviews" id="reviews">
+        <h2 class="section-title">Real Traveler Stories</h2>
+        <div class="review-grid">
+            <div class="review-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="review-text">"Finally found real Phuket! Not a beach resort. Just authentic Thai life. The street food nearby is insane. Will definitely come back."</p>
+                <p class="reviewer-name">- Jake from Canada</p>
+            </div>
+            <div class="review-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="review-text">"Escaped the tourist trap beaches. Old Town is where actual Phuket happens. Budget prices, authentic experience, friendly locals. Perfect."</p>
+                <p class="reviewer-name">- Lisa from Germany</p>
+            </div>
+            <div class="review-card">
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p class="review-text">"Best decision staying here instead of Patong. No party noise, no overpriced drinks, just real Phuket culture. Worth every baht."</p>
+                <p class="reviewer-name">- Marco from Italy</p>
+            </div>
+        </div>
+    </section>
 
-            <div class="room-content">
-                <h3 class="room-name">Budget Single</h3>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>📞 +66 76 234 567</p>
+                <p>📧 info@phuketheritagebudgetstay.com</p>
+                <p>📍 42 Thalang Road, Old Town</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="#rooms">Rooms</a>
+                <a href="#experience">Experience</a>
+                <a href="#location">Location</a>
+                <a href="#reviews">Reviews</a>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Phuket Heritage Budget Stay. Authentically Yours.</p>
+        </div>
+    </footer>
 
-                <div class="room-price">฿599/night</div>
+    <!-- WhatsApp Widget -->
+    <div class="whatsapp-widget">
+        <a href="https://wa.me/66762345678" target="_blank">💬</a>
+    </div>
 
-                <p class="room-description">
-                    Perfect for solo travelers.
-                </p>
-
-                <div class="room-features">
-                    <span class="feature-tag">WiFi</span>
-                    <span class="feature-tag">Fan</span>
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalRoomName">Book Your Room</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label>Guest Name *</label>
+                    <input type="text" id="guestName" required>
                 </div>
 
-                <button class="cta-button"
-                    onclick="openBookingModal('Budget Single')">
-                    Reserve
-                </button>
-            </div>
-        </div>
-
-        <div class="room-card">
-            <div class="room-image">👥</div>
-
-            <div class="room-content">
-                <h3 class="room-name">Budget Double</h3>
-
-                <div class="room-price">฿799/night</div>
-
-                <p class="room-description">
-                    Cozy room for couples.
-                </p>
-
-                <div class="room-features">
-                    <span class="feature-tag">A/C</span>
-                    <span class="feature-tag">Old Town View</span>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="phone" required>
                 </div>
 
-                <button class="cta-button"
-                    onclick="openBookingModal('Budget Double')">
-                    Reserve
-                </button>
-            </div>
-        </div>
-
-        <div class="room-card">
-            <div class="room-image">👨‍👩‍👧</div>
-
-            <div class="room-content">
-                <h3 class="room-name">Family Room</h3>
-
-                <div class="room-price">฿1099/night</div>
-
-                <p class="room-description">
-                    Spacious room for families.
-                </p>
-
-                <div class="room-features">
-                    <span class="feature-tag">2 Beds</span>
-                    <span class="feature-tag">Large Room</span>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="email" required>
                 </div>
 
-                <button class="cta-button"
-                    onclick="openBookingModal('Family Room')">
-                    Reserve
-                </button>
-            </div>
+                <div class="form-group">
+                    <label>Check-in Date *</label>
+                    <input type="date" id="checkInDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Check-out Date *</label>
+                    <input type="date" id="checkOutDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Room Type *</label>
+                    <select id="roomType" required>
+                        <option value="">Select a room</option>
+                        <option value="Single">Single Room</option>
+                        <option value="Double">Double Room</option>
+                        <option value="Suite">Suite</option>
+                        <option value="Family">Family Room</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Number of Guests *</label>
+                    <input type="number" id="numGuests" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Special Requests</label>
+                    <textarea id="specialRequests" placeholder="High floor, crib needed, etc..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Book Now</button>
+            </form>
         </div>
-
-    </div>
-</section>
-
-<section id="reviews">
-    <h2 class="section-title">Reviews</h2>
-
-    <div class="room-grid">
-
-        <div class="room-card">
-            <div class="room-content">
-                ⭐⭐⭐⭐⭐<br><br>
-                "Amazing authentic Phuket experience."
-            </div>
-        </div>
-
-        <div class="room-card">
-            <div class="room-content">
-                ⭐⭐⭐⭐⭐<br><br>
-                "Loved the Old Town atmosphere."
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<footer>
-    <p>© 2025 Phuket Heritage Budget Stay</p>
-</footer>
-
-<!-- WHATSAPP -->
-
-<div class="whatsapp-widget">
-    <a href="https://wa.me/66762345678" target="_blank">
-        💬
-    </a>
-</div>
-
-<!-- MODAL -->
-
-<div id="bookingModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            <h2 id="modalRoomName">Book Room</h2>
-
-            <span class="close" onclick="closeModal()">
-                &times;
-            </span>
-        </div>
-
-        <form id="bookingForm">
-
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" id="guestName" required>
-            </div>
-
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" id="email" required>
-            </div>
-
-            <div class="form-group">
-                <label>Phone</label>
-                <input type="tel" id="phone" required>
-            </div>
-
-            <div class="form-group">
-                <label>Check-in</label>
-                <input type="date" id="checkInDate" required>
-            </div>
-
-            <div class="form-group">
-                <label>Check-out</label>
-                <input type="date" id="checkOutDate" required>
-            </div>
-
-            <div class="form-group">
-                <label>Guests</label>
-                <input type="number" id="numGuests" min="1" required>
-            </div>
-
-            <div class="form-group">
-                <label>Special Requests</label>
-                <textarea id="specialRequests"></textarea>
-            </div>
-
-            <button type="submit" class="submit-btn">
-                Submit Booking
-            </button>
-
-        </form>
-
     </div>
 
-</div>
+    <script>
+        class LineBookingSystem {
+            async sendBookingToLine(bookingData) {
+                try {
+                    const resp = await fetch('/api/send-line', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bookingData)
+                    });
 
-<script>
+                    const json = await resp.json().catch(() => ({}));
+                    if (!resp.ok) {
+                        const err = json.error || `HTTP ${resp.status}`;
+                        throw new Error(err);
+                    }
 
-// DARK MODE
+                    return { success: true, data: json };
+                } catch (err) {
+                    console.error('Proxy /api/send-line error:', err);
+                    return { success: false, error: err.message };
+                }
+            }
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
+            formatBookingMessage(bookingData) {
+                return `🏨 NEW BOOKING REQUEST\n\n👤 Guest Name: ${bookingData.guestName || 'N/A'}\n📞 Phone: ${bookingData.phone || 'N/A'}\n📧 Email: ${bookingData.email || 'N/A'}\n📅 Check-in: ${bookingData.checkInDate || 'N/A'}\n📅 Check-out: ${bookingData.checkOutDate || 'N/A'}\n🛏️ Room Type: ${bookingData.roomType || 'N/A'}\n👥 Number of Guests: ${bookingData.numGuests || 'N/A'}\n💬 Special Requests: ${bookingData.specialRequests || 'None'}\n🌐 Source: Direct Website Booking`;
+            }
 
-    localStorage.setItem(
-        'darkMode',
-        document.body.classList.contains('dark-mode')
-    );
-}
+            attachToForm(formId) {
+                const form = document.getElementById(formId);
+                if (!form) {
+                    console.error(`Form with ID "${formId}" not found`);
+                    return;
+                }
 
-if(localStorage.getItem('darkMode') === 'true'){
-    document.body.classList.add('dark-mode');
-}
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
 
-// SCROLL
+                    const bookingData = {
+                        guestName: document.getElementById('guestName')?.value,
+                        phone: document.getElementById('phone')?.value,
+                        email: document.getElementById('email')?.value,
+                        checkInDate: document.getElementById('checkInDate')?.value,
+                        checkOutDate: document.getElementById('checkOutDate')?.value,
+                        roomType: document.getElementById('roomType')?.value || document.getElementById('modalRoomName')?.textContent.replace('Book ', ''),
+                        numGuests: document.getElementById('numGuests')?.value,
+                        specialRequests: document.getElementById('specialRequests')?.value
+                    };
 
-function scrollToRooms(){
-    document.getElementById('rooms')
-        .scrollIntoView({
-            behavior:'smooth'
+                    const result = await this.sendBookingToLine(bookingData);
+                    if (!result.success) {
+                        alert(`❌ Error sending booking: ${result.error}`);
+                    }
+                });
+            }
+        }
+
+        // LINE credentials are kept server-side in Vercel env vars. Client calls /api/send-line.
+        const lineBooking = new LineBookingSystem();
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+
+        function scrollToRooms() {
+            document.getElementById('rooms').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openBookingModal(roomName) {
+            document.getElementById('modalRoomName').textContent = `Book ${roomName}`;
+            const roomTypeSelect = document.getElementById('roomType');
+            if (roomTypeSelect) {
+                roomTypeSelect.value = roomName.includes('Family') ? 'Family' : roomName.includes('Double') ? 'Double' : roomName.includes('Single') ? 'Single' : '';
+            }
+            document.getElementById('bookingModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('bookingForm').reset();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                room: document.getElementById('roomType').value || document.getElementById('modalRoomName').textContent.replace('Book ', ''),
+                guestName: document.getElementById('guestName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                checkInDate: document.getElementById('checkInDate').value,
+                checkOutDate: document.getElementById('checkOutDate').value,
+                numGuests: document.getElementById('numGuests').value,
+                specialRequests: document.getElementById('specialRequests').value,
+                timestamp: new Date().toISOString()
+            };
+
+            const lineBookingData = {
+                guestName: formData.guestName,
+                phone: formData.phone,
+                email: formData.email,
+                checkInDate: formData.checkInDate,
+                checkOutDate: formData.checkOutDate,
+                roomType: formData.room,
+                numGuests: formData.numGuests,
+                specialRequests: formData.specialRequests
+            };
+
+            const sendWhatsappFallback = () => {
+                const whatsappMessage = encodeURIComponent(
+                    `Booking request:\n` +
+                    `Room: ${formData.room}\n` +
+                    `Name: ${formData.guestName}\n` +
+                    `Email: ${formData.email}\n` +
+                    `Phone: ${formData.phone}\n` +
+                    `Check-in: ${formData.checkInDate}\n` +
+                    `Check-out: ${formData.checkOutDate}\n` +
+                    `Guests: ${formData.numGuests}\n` +
+                    `Special requests: ${formData.specialRequests || 'None'}`
+                );
+                window.open(`https://wa.me/66762345678?text=${whatsappMessage}`, '_blank');
+            };
+
+            const lineResult = await lineBooking.sendBookingToLine(lineBookingData);
+            if (!lineResult.success) {
+                console.error('LINE delivery failed:', lineResult.error);
+                alert(`❌ LINE booking failed: ${lineResult.error}. Sending via WhatsApp fallback now.`);
+                sendWhatsappFallback();
+            }
+
+            // Store booking in localStorage (in a real app, this would be sent to a server)
+            let bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(formData);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            alert(`✅ Thank you ${formData.guestName}! Your booking request for ${formData.room} has been submitted. We'll contact you at ${formData.email} soon.`);
+            closeModal();
         });
-}
 
-// MODAL
-
-const modal = document.getElementById('bookingModal');
-
-function openBookingModal(roomName){
-
-    document.getElementById('modalRoomName')
-        .textContent = `Book ${roomName}`;
-
-    modal.style.display = 'block';
-
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModal(){
-
-    modal.style.display = 'none';
-
-    document.body.style.overflow = 'auto';
-
-    document.getElementById('bookingForm').reset();
-}
-
-// CLOSE OUTSIDE
-
-window.onclick = function(event){
-
-    if(event.target === modal){
-        closeModal();
-    }
-};
-
-// FORM SUBMIT
-
-document.getElementById('bookingForm')
-.addEventListener('submit', function(e){
-
-    e.preventDefault();
-
-    const booking = {
-
-        guestName:
-            document.getElementById('guestName').value,
-
-        email:
-            document.getElementById('email').value,
-
-        phone:
-            document.getElementById('phone').value,
-
-        checkIn:
-            document.getElementById('checkInDate').value,
-
-        checkOut:
-            document.getElementById('checkOutDate').value,
-
-        guests:
-            document.getElementById('numGuests').value,
-
-        special:
-            document.getElementById('specialRequests').value
-    };
-
-    // SAVE LOCALLY
-
-    let bookings =
-        JSON.parse(localStorage.getItem('bookings'))
-        || [];
-
-    bookings.push(booking);
-
-    localStorage.setItem(
-        'bookings',
-        JSON.stringify(bookings)
-    );
-
-    // WHATSAPP MESSAGE
-
-    const msg = encodeURIComponent(
-
-`🏨 BOOKING REQUEST
-
-Name: ${booking.guestName}
-Email: ${booking.email}
-Phone: ${booking.phone}
-
-Check-in: ${booking.checkIn}
-Check-out: ${booking.checkOut}
-
-Guests: ${booking.guests}
-
-Special:
-${booking.special}`
-
-    );
-
-    window.open(
-        `https://wa.me/66762345678?text=${msg}`,
-        '_blank'
-    );
-
-    alert('✅ Booking submitted successfully!');
-
-    closeModal();
-});
-
-</script>
-
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </body>
 </html>
