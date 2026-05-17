@@ -30,6 +30,33 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const text = await response.text();
+      // Try LINE Notify fallback if available
+      const NOTIFY_TOKEN = process.env.LINE_NOTIFY_TOKEN;
+      if (NOTIFY_TOKEN) {
+        try {
+          const form = new URLSearchParams();
+          form.append('message', message);
+          const notifyResp = await fetch('https://notify-api.line.me/api/notify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Authorization': `Bearer ${NOTIFY_TOKEN}`
+            },
+            body: form.toString()
+          });
+
+          if (notifyResp.ok) {
+            return res.status(200).json({ success: true, fallback: 'notify' });
+          } else {
+            const notifyText = await notifyResp.text();
+            return res.status(502).json({ error: `LINE push error: ${response.status} ${text}; notify error: ${notifyResp.status} ${notifyText}` });
+          }
+        } catch (notifyErr) {
+          console.error('notify error', notifyErr);
+          return res.status(502).json({ error: `LINE push error: ${response.status} ${text}; notify exception: ${notifyErr.message}` });
+        }
+      }
+
       return res.status(response.status).json({ error: `LINE API error: ${response.status} ${text}` });
     }
 
