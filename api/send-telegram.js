@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        const BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
+        const BOT_TOKEN = "8935653149:AAFQtSw5AW2teyszyW0m5wzuaKz3vKFDgzU";
         const CHAT_ID = "6775142470";
 
         // 🔥 SUPER SAFE BODY PARSER (fixes your issue instantly)
